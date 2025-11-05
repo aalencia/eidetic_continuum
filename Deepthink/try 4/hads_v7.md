@@ -1,6 +1,6 @@
 
 HADS V7+: Operationalizing the Infinite Refinement Architecture for High-Assurance Decisions
-
+Hybrid Agentic Decision System
 
 I. Strategic Synthesis: The HADS V7 Mandate
 
