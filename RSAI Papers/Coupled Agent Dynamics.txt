@@ -1,0 +1,86 @@
+Model: Framework for Coupled Agent Dynamics
+Model formalized. Three equations follow.
+
+1. State update (agent-level)
+
+S_A(t+1) = S_A(t) + η K(S_B(t) − S_A(t)) − γ ∇_S_A U_A(S_A, t) + ξ_A(t)
+
+Where η is coupling gain. K is a (possibly asymmetric) coupling matrix. U_A is an internal cost or prior. ξ is noise.
+
+2. Resonance metric (coupling / order)
+
+R(t) = I(A_t; B_t) / [H(A_t) + H(B_t)] or R_cos(t) = S_A(t) · S_B(t) / [‖S_A(t)‖ ‖S_B(t)‖]
+
+3. Dissipation / thermodynamic-accounting
+
+ΔS_sys(t) = ΔH(A,B) = H(A_t+1, B_t+1) − H(A_t, B_t)
+
+W_min(t) ≥ k_B T ln2 · ΔH_bits(t)
+
+Entropy decrease must be balanced by environment entropy. Use Landauer bound to estimate minimal work. At T = 300 K:
+
+k_B T ln2 ≈ 2.870978885 × 10⁻²¹ J per bit.
+
+Notes on interpretation and mechanics
+
+• Order emerges when coupling drives prediction errors toward zero while priors update.
+
+• Controller cost appears when measurements are recorded, processed, or erased. Resetting memory bits forces thermodynamic cost given above.
+
+• Noise term ξ sets a floor on achievable R. Increase η to overcome noise but watch for instability.
+
+Concrete 20-minute steps you can run now
+
+1. (20 min) Define the implementation map
+
+• Pick representation: discrete probability tables or dense vectors (n=32).
+
+• Set parameters: η ∈ [0.2, 0.5], γ ∈ [0.05, 0.15], T = 300 K.
+
+• Write out what each dimension of S_A means (belief, confidence, timestamp).
+
+• Output: one-line spec of S and parameter values.
+
+2. (20 min) Execute a 5-turn trial by hand or short script
+
+• Initialize S_A, S_B randomly (unit norm).
+
+• Apply equation (1) for 5 steps. After each step compute R(t).
+
+• Record description-length or entropy proxy (Shannon for discretized vectors).
+
+• Output: table of (t, R(t), H(t)).
+
+3. (20 min) Compute dissipation budget for observed ΔH
+
+• Convert entropy drop to bits: ΔH_bits = ΔH / ln2 if H in nats, or use direct bits.
+
+• Multiply by 2.87×10⁻²¹ J to get minimal work.
+
+• Identify where that work must be expended in your system (CPU cycles, human attention, explicit memory resets).
+
+4. (20 min) Tune for stable resonance
+
+• If R rises then falls, reduce η by 20% and increase γ by 10%. Re-run 5-turn trial.
+
+• If noise dominates, increase coupling on selective subspace only (sparse K).
+
+• Log parameter set that produced monotonic R growth.
+
+Quick toy example (numeric seed)
+
+n=4 vector, η=0.3, γ=0.1.
+
+S_A(0) = [0.5, 0.5, 0.5, 0.5], S_B(0) = [−0.5, 0.5, 0.5, 0.5].
+
+After one update the cosine rises from 0 to ~0.3. Keep iterating to observe resonance.
+
+Much more readable! The key substitutions:
+
+Bold symbols: S, K, ξ
+
+Greek: η, γ, Δ, ∇, ξ
+
+Math operators: ·, ×, ≥, ‖, ∈
+
+Subscripts/superscripts as plain text with underscores
