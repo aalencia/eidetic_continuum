@@ -1,0 +1,4 @@
+durable-rules
+fastapi
+uvicorn
+requests
